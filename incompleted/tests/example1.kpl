@@ -1,0 +1,23 @@
+Program Example1; (* Example 1 *)
+procedure ARRREND(N: INTEGER);
+    VAR EVEN:INTEGER; character: char;
+    BEGIN
+        FOR even := 1 TO 2 DO
+            CALL WRITEC('2');
+        WHILE N != 1 DO 
+            BEGIN
+                CALL WRITEI(N);
+                CALL WRITEC(',');
+                CALL WRITEC(' ');
+
+                EVEN := N/2;
+                IF EVEN*2 == N THEN 
+                    N := EVEN
+                ELSE N := N*3+1;
+            END;
+        
+        CALL WRITEI(1);
+    END;
+Begin
+CALL ARRREND(22);
+End. (* Example 1 *)
