@@ -145,6 +145,14 @@ void checkArrayType(Type* type) {
   else error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
 }
 
+void checkStringType(Type* type) {
+  if (type != NULL && type->typeClass == TP_ARRAY && type->elementType->typeClass == TP_CHAR) {
+    return;
+  } else {
+    error(ERR_TYPE_INCONSISTENCY, currentToken->lineNo, currentToken->colNo);
+  }
+}
+
 void checkTypeEquality(Type* type1, Type* type2) {
   //\\ TODO
   if (compareType(type1, type2) == 0)

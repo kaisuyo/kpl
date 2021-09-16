@@ -5,4 +5,3 @@ Program EXAMPLE5
         Param I : Int
         Const B = 1
         Type A = Arr(5,Char)
-

@@ -1,54 +1,13 @@
 PROGRAM  EXAMPLE4;  /* Example 4 */
-CONST MAX = 10;
-TYPE T = INTEGER;
-VAR  A : ARRAY(. 10 .) OF T;
-     N : INTEGER;
-     CH : CHAR;
+  type superString = string[10];
+  var str : superString; N : integer;
 
-PROCEDURE INPUT;
-VAR I, TMP : INTEGER;
-fl : float;
-    
+function F(n: integer):integer;
 BEGIN
-  N := READI;
-  FOR I := 1 TO 2 DO
-     A[I] := READI;
-
-  TMP, i := 2 % 2, 1+2;
-  N, fl := 3, N <= 1 ? 5 : 5;
-  fl += 5;
-END;
-
-PROCEDURE OUTPUT;
-VAR I : INTEGER;
-BEGIN
-  FOR I := 1 TO N DO
-     BEGIN
-       CALL WRITEI(A[I]);
-       CALL WRITELN;
-     END
-END;
-
-FUNCTION SUM : INTEGER;
-VAR I: INTEGER;
-    S : INTEGER;
-BEGIN
-    S := 0;
-    I := 1;
-    WHILE I <= N DO
-     BEGIN
-       S := S + A[I];
-       I := I + 1;
-     END
+  if n = 0 then f := 0;
+  if n = 1 then f := 1;
+  if n > 1 then f := f(n-1) + f(n-2);
 END;
 
 BEGIN
-   CH := 'y';
-   WHILE CH = 'y' DO
-     BEGIN
-       CALL INPUT;
-       CALL OUTPUT;
-       CALL WRITEI(SUM);
-       CH := READC;
-     END
 END.  (* Example 4 *)

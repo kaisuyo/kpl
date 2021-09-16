@@ -17,6 +17,7 @@
 
 extern int lineNo;
 extern int colNo;
+extern int isString;
 extern int currentChar;
 
 extern CharCode charCodes[];
@@ -152,7 +153,6 @@ Token* readConstChar(void) {
   }
 }
 
-
 Token* readPlus() {
   int ln = lineNo, col = colNo;
   readChar();
@@ -227,6 +227,21 @@ Token* getToken(void) {
 
   if (currentChar == EOF) 
     return makeToken(TK_EOF, lineNo, colNo);
+  
+  if (isString == 1) {
+    if (charCodes[currentChar] == CHAR_QUOTATION) {
+      isString = 0;
+      readChar();
+      return makeToken(SB_QUOTATION, lineNo, colNo);
+    }
+
+    Token* token = makeToken(TK_CHAR, lineNo, colNo);
+    token->string[0] = currentChar;
+    token->string[1] = '\0';
+    readChar();
+    
+    return token;
+  }
 
   switch (charCodes[currentChar]) {
   case CHAR_SPACE: skipBlank(); return getToken();
@@ -236,6 +251,13 @@ Token* getToken(void) {
   case CHAR_MINUS: return readMinus();
   case CHAR_TIMES: return readTimes();
   case CHAR_SLASH: return readSlash();
+  case CHAR_QUOTATION: {
+    ln = lineNo;
+    cn = colNo;
+    readChar();
+    isString = 1; 
+    return makeToken(SB_QUOTATION, ln, cn);
+  }
   case CHAR_LT:
     ln = lineNo;
     cn = colNo;
@@ -378,6 +400,7 @@ void printToken(Token *token) {
   case KW_FLOAT: printf("KW_FLOAT\n"); break;
   case KW_CHAR: printf("KW_CHAR\n"); break;
   case KW_ARRAY: printf("KW_ARRAY\n"); break;
+  case KW_STRING: printf("KW_STRING\n"); break;
   case KW_OF: printf("KW_OF\n"); break;
   case KW_FUNCTION: printf("KW_FUNCTION\n"); break;
   case KW_PROCEDURE: printf("KW_PROCEDURE\n"); break;
@@ -391,6 +414,7 @@ void printToken(Token *token) {
   case KW_DO: printf("KW_DO\n"); break;
   case KW_FOR: printf("KW_FOR\n"); break;
   case KW_TO: printf("KW_TO\n"); break;
+  case KW_RETURN: printf("KW_RETURN\n"); break;
 
   case SB_SEMICOLON: printf("SB_SEMICOLON\n"); break;
   case SB_COLON: printf("SB_COLON\n"); break;
@@ -417,6 +441,7 @@ void printToken(Token *token) {
   case SB_ASSIGN_DIVIDE: printf("SB_ASSIGN_DIVIDE\n"); break;
   case SB_MODULUS: printf("SB_MODULUS\n"); break;
   case SB_QUESTION: printf("SB_QUESTION\n"); break;
+  case SB_QUOTATION: printf("SB_QUOTATION\n"); break;
   }
 }
 

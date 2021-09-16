@@ -2,8 +2,6 @@ Program Example1; (* Example 1 *)
 procedure ARRREND(N: INTEGER);
     VAR EVEN:INTEGER; character: char;
     BEGIN
-        FOR even := 1 TO 2 DO
-            CALL WRITEC('2');
         WHILE N != 1 DO 
             BEGIN
                 CALL WRITEI(N);

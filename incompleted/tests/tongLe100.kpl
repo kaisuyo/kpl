@@ -1,0 +1,17 @@
+Program Example2; (* Factorial *)
+
+function tongSoLe100 : integer;
+var i : integer; temp : integer;
+BEGIN
+  tongSoLe100 := 0;
+
+  For i := 0 to 100 do 
+  BEGIN
+    temp := i / 2;
+    if temp*2 != i then tongSoLe100 := tongSoLe100 + i;
+  END;
+END;
+
+Begin
+  call WRITEI(tongSoLe100)
+End. (* Factorial *)

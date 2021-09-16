@@ -1,0 +1,16 @@
+program powOfTwo;
+
+function powOfTwo(N: integer) : integer;
+var i : integer;
+BEGIN
+    if N = 0 THEN powOfTwo := 1;
+    if N > 0 THEN 
+    BEGIN
+        FOR i := 1 TO n do powOfTwo := powOfTwo*2;
+    END;
+
+END;
+
+BEGIN
+CALL WRITEI(powOfTwo(5));
+END.

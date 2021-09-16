@@ -8,7 +8,7 @@
 #include "reader.h"
 
 FILE *inputStream;
-int lineNo, colNo;
+int lineNo, colNo, isString;
 int currentChar;
 
 int readChar(void) {

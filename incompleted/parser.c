@@ -323,6 +323,17 @@ Type* compileType(void) {
     elementType = compileType();
     type = makeArrayType(arraySize, elementType);
     break;
+  case KW_STRING: 
+    eat(KW_STRING);
+    eat(SB_LSEL);
+    eat(TK_NUMBER);
+
+    arraySize = currentToken->intValue;
+
+    eat(SB_RSEL);
+    elementType = makeCharType();
+    type = makeArrayType(arraySize, elementType);
+    break;
   case TK_IDENT:
     eat(TK_IDENT);
     obj = checkDeclaredType(currentToken->string);
@@ -450,7 +461,10 @@ Type* compileLValue(void) {
   switch (var->kind) {
   case OBJ_VARIABLE:
     if (var->varAttrs->type->typeClass == TP_ARRAY) {
-      varType = compileIndexes(var->varAttrs->type);
+      if (var->varAttrs->type->elementType->typeClass == TP_CHAR && lookAhead->tokenType != SB_LSEL) {
+        varType = var->varAttrs->type;
+      } else 
+        varType = compileIndexes(var->varAttrs->type);
     }
     else
       varType = var->varAttrs->type;
@@ -544,6 +558,7 @@ void compileSuperAssignSt(void) {
   int i;
   for (i = 0; i < variableLTotal; i++) {
     checkTypeEquality(LType[i], RType[i]);
+    // printf("%d %d\n", LType[i]->typeClass, RType[i]->typeClass);
   }
 }
 
@@ -697,6 +712,7 @@ void compileArguments(ObjectNode* paramList) {
   case SB_SEMICOLON:
   case KW_END:
   case KW_ELSE:
+  case KW_RETURN:
   case KW_THEN:
     break;
   default:
@@ -757,6 +773,27 @@ Type* compileExpression(void) {
     if (type->typeClass != TP_INT && type->typeClass != TP_FLOAT)
       checkIntType(type);
     break;
+  case SB_QUOTATION:
+    eat(SB_QUOTATION);
+    int strLen = 0;
+    while (lookAhead->tokenType != SB_QUOTATION) {
+      strLen++;
+      eat(TK_CHAR);
+    }
+    eat(SB_QUOTATION);
+    return makeArrayType(strLen, charType);
+    break;
+  case KW_IF:
+    eat(KW_IF);
+    compileCondition();
+    eat(KW_RETURN);
+    Type* t1 = compileExpression();
+    eat(KW_ELSE);
+    eat(KW_RETURN);
+    Type* t2 = compileExpression();
+    checkTypeEquality(t1, t2);
+    return t1;
+    break;
   default:
     type = compileExpression2();
   }
@@ -813,6 +850,7 @@ Type* compileExpression3(Type* argType1) {
   case KW_END:
   case KW_ELSE:
   case KW_THEN:
+  case KW_RETURN:
     resultType = argType1;
     break;
   default:
@@ -869,6 +907,7 @@ Type* compileTerm2(Type* argType1) {
   case SB_QUESTION:
   case KW_TO:
   case KW_DO:
+  case KW_RETURN:
   case SB_RPAR:
   case SB_COMMA:
   case SB_COLON:
